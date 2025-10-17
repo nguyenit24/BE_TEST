@@ -52,6 +52,7 @@ public class WebSecurityConfig {
         httpSecurity
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                         .requestMatchers("/", "/index.html", "/static/**", "/assets/**", "/favicon.ico",  "/vite.svg").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/phim/**", "/api/theloai/**","/api/loaighe/**").permitAll() // Cho phép xem phim, thể loại
                         .anyRequest().authenticated()
                 )
