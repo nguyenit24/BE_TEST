@@ -15,7 +15,7 @@ public class WebConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // Chỉ định rõ nguồn gốc của frontend được phép truy cập
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","*"));
 
         // Các phương thức được phép (GET, POST, etc.)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
