@@ -1,14 +1,27 @@
-# Step 1: Chọn image Java
-FROM eclipse-temurin:17-jdk-alpine
+# ===== Stage 1: Build =====
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 
-# Step 2: Tạo thư mục cho ứng dụng
+# Set working directory
 WORKDIR /app
 
-# Step 3: Copy file jar đã build vào container
-COPY target/MovieTicker-0.0.1-SNAPSHOT.jar app.jar
+# Copy pom.xml và source code
+COPY pom.xml .
+COPY src ./src
 
-# Step 4: Expose cổng ứng dụng
+# Build the Spring Boot application
+RUN mvn clean package -DskipTests
+
+# ===== Stage 2: Run =====
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# Copy jar từ stage build
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port
 EXPOSE 8080
 
-# Step 6: Chạy ứng dụng Spring Boot
-ENTRYPOINT ["java","-jar","app.jar"]
+
+# Run Spring Boot app
+ENTRYPOINT ["java", "-jar", "app.jar"]
