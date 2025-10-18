@@ -1,20 +1,18 @@
 server:
-  port: ${PORT:8080}   # Render tự cấp port, nên phải để như vậy
+  port: ${SERVER_PORT:8080}
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-
+        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
   security:
     oauth2:
       client:
@@ -25,43 +23,32 @@ spring:
             scope:
               - email
               - profile
-
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-    view:
-      suffix: .html
-
-  web:
-    resources:
-      static-locations: classpath:/static/
-
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
     properties:
       mail:
         smtp:
-          auth: true
+          auth: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH:true}
           starttls:
-            enable: true
+            enable: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE:true}
           ssl:
-            trust: smtp.gmail.com
+            trust: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST:smtp.gmail.com}
 
 springdoc:
   api-docs:
-    path: /api-docs
+    path: ${SPRINGDOC_API_DOCS_PATH:/api-docs}
 
 momo:
-  partnerCode: MOMO
-  accessKey: F8BBA842ECF85
-  secretKey: K951B6PE1waDMi640xX08PD3vg6EkVlz
-  endpoint: https://test-payment.momo.vn/v2/gateway/api
-  returnUrl: ${BASE_URL}/api/payment/momo/payment_info
-  ipn-url: ${BASE_URL}/api/momo/ipn-handler
-  requestType: payWithMethod
+  partnerCode: ${MOMO_PARTNER_CODE}
+  accessKey: ${MOMO_ACCESS_KEY}
+  secretKey: ${MOMO_SECRET_KEY}
+  endpoint: ${MOMO_ENDPOINT}
+  returnUrl: ${MOMO_RETURN_URL}
+  ipn-url: ${MOMO_IPN_URL}
+  requestType: ${MOMO_REQUEST_TYPE}
 
 jwt:
   Key: ${JWT_KEY}
@@ -72,6 +59,6 @@ frontend:
 qr:
   code:
     upload:
-      path: uploads/qr-codes
+      path: ${QR_CODE_UPLOAD_PATH}
     base:
-      url: ${BASE_URL}
+      url: ${QR_CODE_BASE_URL}
