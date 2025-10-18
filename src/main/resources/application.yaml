@@ -55,14 +55,15 @@ springdoc:
     path: ${SPRINGDOC_API_DOCS_PATH:/api-docs}
 
 momo:
-  partnerCode: ${MOMO_PARTNER_CODE}
-  accessKey: ${MOMO_ACCESS_KEY}
-  secretKey: ${MOMO_SECRET_KEY}
-  endpoint: ${MOMO_ENDPOINT}
-  returnUrl: ${MOMO_RETURN_URL}
-  ipn-url: ${MOMO_IPN_URL}
+  partnerCode: ${MOMO_PARTNER_CODE:default}
+  accessKey: ${MOMO_ACCESS_KEY:default}
+  secretKey: ${MOMO_SECRET_KEY:default}
+  endpoint: ${MOMO_ENDPOINT:https://test-payment.momo.vn/v2/gateway/api}
+  returnUrl: ${MOMO_RETURN_URL:http://localhost:8080/payment/momo/return}
+  ipn-url: ${MOMO_IPN_URL:http://localhost:8080/payment/momo/ipn}
   requestType: ${MOMO_REQUEST_TYPE:payWithMethod}
 
+  
 jwt:
   Key: ${JWT_KEY}
 
