@@ -1,18 +1,30 @@
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${PORT:8080}
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    # Railway MySQL sử dụng biến MYSQL_URL hoặc tự set
+    url: ${MYSQL_URL:${SPRING_DATASOURCE_URL}}
+    username: ${MYSQLUSER:${SPRING_DATASOURCE_USERNAME}}
+    password: ${MYSQLPASSWORD:${SPRING_DATASOURCE_PASSWORD}}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+  
   jpa:
     hibernate:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     properties:
       hibernate:
-        dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
-    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
+    open-in-view: false
+  
   security:
     oauth2:
       client:
@@ -23,19 +35,20 @@ spring:
             scope:
               - email
               - profile
+  
   mail:
-    host: ${SPRING_MAIL_HOST}
-    port: ${SPRING_MAIL_PORT}
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
     username: ${SPRING_MAIL_USERNAME}
     password: ${SPRING_MAIL_PASSWORD}
     properties:
       mail:
         smtp:
-          auth: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH:true}
+          auth: true
           starttls:
-            enable: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE:true}
+            enable: true
           ssl:
-            trust: ${SPRING_MAIL_PROPERTIES_MAIL_SMTP_SSL_TRUST:smtp.gmail.com}
+            trust: smtp.gmail.com
 
 springdoc:
   api-docs:
@@ -48,7 +61,7 @@ momo:
   endpoint: ${MOMO_ENDPOINT}
   returnUrl: ${MOMO_RETURN_URL}
   ipn-url: ${MOMO_IPN_URL}
-  requestType: ${MOMO_REQUEST_TYPE}
+  requestType: ${MOMO_REQUEST_TYPE:payWithMethod}
 
 jwt:
   Key: ${JWT_KEY}
@@ -59,6 +72,6 @@ frontend:
 qr:
   code:
     upload:
-      path: ${QR_CODE_UPLOAD_PATH}
+      path: ${QR_CODE_UPLOAD_PATH:/app/uploads}
     base:
       url: ${QR_CODE_BASE_URL}

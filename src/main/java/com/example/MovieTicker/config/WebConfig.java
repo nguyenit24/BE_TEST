@@ -5,10 +5,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.google.api.client.util.Value;
+
 import java.util.List;
 
 @Configuration
 public class WebConfig {
+
+    @Value("${frontend.base-url}")
+    private String frontendUrl;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -16,7 +22,10 @@ public class WebConfig {
 
         // Chỉ định rõ nguồn gốc của frontend được phép truy cập
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-
+        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedOrigin(frontendUrl);
         // Các phương thức được phép (GET, POST, etc.)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
@@ -31,8 +40,8 @@ public class WebConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // Áp dụng cấu hình này cho tất cả các API bắt đầu bằng "/api/"
-        source.registerCorsConfiguration("/api/**", configuration);
-
+        source.registerCorsConfiguration("/**", configuration);
+        
         return source;
     }
 }
